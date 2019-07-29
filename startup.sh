@@ -1,0 +1,1 @@
+java -cp log-ansync.jar log-ansync.jar com.log.ansync.LogAnsync -logType=nginx 
