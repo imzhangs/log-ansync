@@ -27,6 +27,10 @@ import com.log.ansync.position.LogPositionService;
 public class LogAnsync {
 
 	static final String LOG_TYPE_KEY = "logType";
+	
+	static final String DELAY_MILLS_KEY = "delay";
+	
+	static int DELAY_MILLS_VAL = 1000;
 
 	static final Logger logger = LoggerFactory.getLogger(LogAnsync.class);
 
@@ -53,6 +57,11 @@ public class LogAnsync {
 			logType = LogTypeEnum.valueOf(argMap.get(LOG_TYPE_KEY).toUpperCase());
 		} else {
 			logger.warn("input param {} is null , use default value={}", LOG_TYPE_KEY, logType.getType());
+		}
+		if (argMap.containsKey(DELAY_MILLS_KEY)) {
+			DELAY_MILLS_VAL = Integer.valueOf(argMap.get(DELAY_MILLS_KEY));
+		} else {
+			logger.warn("input param {} is null , use default value={}", DELAY_MILLS_KEY, DELAY_MILLS_VAL);
 		}
 		String logInputPath = "";
 		String logOutputPath = "";
@@ -111,7 +120,7 @@ public class LogAnsync {
 		LogPositionService.loadAllPosition(new File(saveLastPositionPath + logType.name().toLowerCase() + "/"));
 
 		if (StringUtils.isNotBlank(logInputPath)) {
-			seekLogFile(logType, logInputPath, logOutputPath, 5);
+			seekLogFile(logType, logInputPath, logOutputPath, DELAY_MILLS_VAL);
 		} else {
 			logger.error("logPath ={} !!!!", logInputPath);
 		}
@@ -189,7 +198,7 @@ public class LogAnsync {
 					}
 				}
 
-			}, 0, delay, TimeUnit.SECONDS);
+			}, 0, delay, TimeUnit.MILLISECONDS);
 		}
 	}
 
