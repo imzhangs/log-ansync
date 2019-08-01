@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 public class LogPositionService {
 	
 	static final Map<String,Long> lastPositionMap=new ConcurrentHashMap<String,Long>();
+	
+	static final ScheduledThreadPoolExecutor cacheTask = new ScheduledThreadPoolExecutor(20);
 
 	public static void loadAllPosition(File positionDir) {
 		try {
@@ -22,6 +26,13 @@ public class LogPositionService {
 			}else {
 				FileUtils.forceMkdir(positionDir);
 			}
+			cacheTask.scheduleWithFixedDelay(new Runnable() {
+
+				public void run() {
+					lastPositionMap.clear();
+				}
+				
+			},0,86400,TimeUnit.SECONDS);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,7 +43,7 @@ public class LogPositionService {
 			FileUtils.writeStringToFile(lastPositionFile, pos+"", "utf-8", false);
 			lastPositionMap.put(lastPositionFile.getName(), pos);
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 	}
 	
@@ -50,5 +61,6 @@ public class LogPositionService {
 		}
 		return pos==null?0:pos;
 	}
+	
 	
 }
