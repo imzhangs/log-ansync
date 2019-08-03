@@ -37,6 +37,6 @@
 
 #### 2.5 other 日志目录参数说明  
 ```
-  -nginx.input.dir=/home/logs				    工具默认other输入 (/home/logs)  
-  -iis.output.dir/log-ansync/xxxx/		            工具默认other输出(/log-ansync/nginxlogs/)   
+  -other.input.dir=/home/logs				    工具默认other输入 (/home/logs)  
+  -other.output.dir=/log-ansync/xxxx/		            工具默认other输出(/log-ansync/nginxlogs/)   
 ```
